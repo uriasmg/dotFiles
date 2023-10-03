@@ -6,7 +6,7 @@ contato@drmuller.com.br
 
 ---
 
-My tool to recreate my dev environment :)
+A tool to recreate my dev environment :)
 
 - common packages (gnupg, pass, stow, curl, unzip
 - git
