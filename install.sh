@@ -3,9 +3,9 @@
 declare -A install_decisions
 
 install_common_packages() {
-    echo "Installing common packages..."
+    echo "(re)Installing common packages (curl pass, gcc, stow...) ..."
     sudo apt update > /dev/null 2>&1
-    sudo apt install curl gnupg pass unzip stow ca-certificates -y > /dev/null 2>&1 && echo "Common packages installed" || echo "Failed to install common packages."
+    sudo apt install curl gnupg gcc pass unzip stow ca-certificates -y > /dev/null 2>&1 && echo "Common packages installed" || echo "Failed to install common packages."
 }
 
 install_ansible() {
@@ -65,6 +65,7 @@ install_gitcredentialmanager() {
     curl -LO https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.3.2/gcm-linux_amd64.2.3.2.tar.gz
     sudo tar -xvf gcm-linux_amd64.2.3.2.tar.gz -C /usr/local/bin
     git-credential-manager configure
+    rm gcm-linux_amd64.2.3.2.tar.gz
 }
 
 install_neovim() {
@@ -80,12 +81,14 @@ install_neovim() {
 }
 
 install_nerdfonts() {
-    echo "Installing my nerdfont..."
-    curl -LO https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip
-    mkdir ~/.fonts
-    sudo unzip JetBrainsMono.zip ~/.fonts
-    sudo fc-cache -f -v
-    rm ./JetBrainsMono.zip
+    if [ "$env_choice" == "Linux" ]; then
+        echo "Installing my nerdfont 99mb, be patient)..."
+        curl -LO https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip
+        # mkdir ~/.fonts
+        unzip -o JetBrainsMono.zip -d ~/usr/share/fonts/
+        sudo fc-cache -f -v
+        rm ./JetBrainsMono.zip
+    fi
 }
 
 install_lazygit() {
@@ -98,6 +101,7 @@ install_lazygit() {
     tar xf lazygit.tar.gz lazygit
     sudo install lazygit /usr/local/bin
     rm lazygit.tar.gz
+    rm lazygit
 }
 
 prompt_to_go_on() {
@@ -120,13 +124,13 @@ prompt_for_installation() {
 prompt_for_stow() {
     read -p "Do you want to stow your files(y/n): " choice
     if [ "$choice" == "y" ]; then
-        mv ~/.tmux.conf ~/.tmux.conf.bak
-        stow --target=$HOME */
+        mv ~/.tmux.conf ~/.tmux.conf.bak && echo "backing up tmux conf" || echo "no previous tmux conf find"
+        stow */
     fi
 }
 
 prompt_for_gcmconfig() {
-    read -p "Do you want to stow your files(y/n): " choice
+    read -p "Do you want to set GCM (y/n): " choice
     if [ "$choice" == "y" ]; then
         if [ "$env_choice" == "WSL" ]; then
             git config --global credential.helper "/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager.exe"
@@ -157,8 +161,10 @@ main() {
     if [ "$env_choice" == "WSL" ]; then
         echo "Smells like WSL..."
         echo "It will be easier to install Git on windows to use GCM, ok?"
+        echo "I also suggest you to install docker desktop in your windows host"
+        echo "Oh, BTW, set up a nerdFont for this terminal!"
     elif [ "$env_choice" == "Linux" ]; then
-        echo "Detected environment: Linux (even Mac is ok here...)"
+        echo "Detected environment: Linux (even Mac is maybe ok here...)"
     else
         echo "Did not understand... Bye!"
         exit 1
