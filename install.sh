@@ -91,8 +91,8 @@ install_nerdfonts() {
         echo "Installing my nerdfont 99mb, be patient)..."
         curl -LO https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip
         # mkdir ~/.fonts
-        sudo mkdir -p ~/usr/share/fonts/truetype/JetBrainsMono
-        unzip -o JetBrainsMono.zip -d ~/usr/share/fonts/truetype/JetBrainsMono/
+        sudo mkdir -p /usr/share/fonts/truetype/JetBrainsMono
+        sudo unzip -o JetBrainsMono.zip -d /usr/share/fonts/truetype/JetBrainsMono/
         sudo fc-cache -f -v
         rm ./JetBrainsMono.zip
     fi
