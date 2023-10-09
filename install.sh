@@ -99,6 +99,7 @@ install_neovim() {
     sudo ln -s /squashfs-root/AppRun /usr/bin/nvim 
     rm ./nvim.appimage 
     sudo apt install ripgrep fd-find -y
+    pip3 install neovim
 }
 
 install_nerdfonts() {
