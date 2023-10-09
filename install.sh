@@ -100,6 +100,7 @@ install_neovim() {
     rm ./nvim.appimage 
     sudo apt install ripgrep fd-find -y
     pip3 install neovim
+    npm i -g neovim
 }
 
 install_nerdfonts() {
@@ -227,17 +228,17 @@ main() {
             "git-credential-manager")
                 install_gitcredentialmanager
                 ;;
-            "neovim")
-                install_neovim
-                install_nerdfonts
-                install_lazygit
-                ;;
             "gparted")
                 install_gparted
                 ;;
             "node")
                 add_nodekeys
                 install_node
+                ;;
+            "neovim")
+                install_neovim
+                install_nerdfonts
+                install_lazygit
                 ;;
             "docker")
                 add_dockerkeys
