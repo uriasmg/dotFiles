@@ -5,7 +5,7 @@ declare -A install_decisions
 install_common_packages() {
     echo "(re)Installing common packages (curl pass, gcc, stow...) ..."
     sudo apt update > /dev/null 2>&1
-    sudo apt install curl gnupg gcc pass unzip stow ca-certificates -y > /dev/null 2>&1 && echo "Common packages installed" || echo "Failed to install common packages."
+    sudo apt install curl gnupg gcc pass unzip stow ca-certificates python3 g++ make python3-pip -y > /dev/null 2>&1 && echo "Common packages installed" || echo "Failed to install common packages."
 }
 
 install_ansible() {
@@ -48,8 +48,23 @@ install_gparted() {
 }
 
 install_docker() {
+    sudo apt update
     echo "Installing docker..."
     sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y > /dev/null 2>&1
+}
+
+add_nodekeys() {
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+    read -p "Which version of node you want to install (18 is LTS): " choice
+    NODE_MAJOR=$choice
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+    sudo apt update
+}
+
+
+install_node() {
+    echo "Installing nodejs 18..."
+    sudo apt-get install nodejs -y > /dev/null 2>&1
 }
 
 add_dockerkeys() {
@@ -184,6 +199,7 @@ main() {
     prompt_for_installation "tmux"
     prompt_for_installation "neovim"
     prompt_for_installation "ansible"
+    prompt_for_installation "node"
     if [ "$env_choice" == "Linux" ]; then
         prompt_for_installation "docker"
         prompt_for_installation "gparted"
@@ -217,6 +233,10 @@ main() {
                 ;;
             "gparted")
                 install_gparted
+                ;;
+            "node")
+                add_nodekeys
+                install_node
                 ;;
             "docker")
                 add_dockerkeys
