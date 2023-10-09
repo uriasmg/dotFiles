@@ -30,6 +30,12 @@ install_git() {
     sudo apt install -y git > /dev/null 2>&1
 }
 
+install_catppuccin_gnome_terminal() {
+    echo "Installing catppuccin gnome terminal theme..."
+    curl -L https://raw.githubusercontent.com/catppuccin/gnome-terminal/v0.2.0/install.py | python3 -
+    rm install.py
+}
+
 install_tmux() {
     echo "Installing tmux..."
     sudo apt install -y tmux > /dev/null 2>&1
@@ -180,6 +186,7 @@ main() {
     if [ "$env_choice" == "Linux" ]; then
         prompt_for_installation "docker"
         prompt_for_installation "gparted"
+        prompt_for_installation "catppuccin"        
     fi
 
     # Install my beloved packages
@@ -213,6 +220,9 @@ main() {
             "docker")
                 add_dockerkeys
                 install_docker
+                ;;
+            "catppuccin")
+                install_catppuccin_gnome_terminal
                 ;;
         esac
     done
