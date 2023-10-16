@@ -30,6 +30,18 @@ install_git() {
     sudo apt install -y git > /dev/null 2>&1
 }
 
+add_sublimekeys() {
+    echo "Adding sublime repos..."
+    wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/sublimehq-archive.gpg > /dev/null
+    echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+    sudo apt update > /dev/null 2>&1
+}
+
+install_sublime() {
+    echo "Installing sublime (nice for BIG files)..."
+    sudo apt install -y sublime-text > /dev/null 2>&1
+}
+
 install_catppuccin_gnome_terminal() {
     echo "Installing catppuccin gnome terminal theme..."
     curl -L https://raw.githubusercontent.com/catppuccin/gnome-terminal/v0.2.0/install.py | python3 -
@@ -201,11 +213,12 @@ main() {
     prompt_for_installation "tmux"
     prompt_for_installation "neovim"
     prompt_for_installation "ansible"
-    prompt_for_installation "node"
+    prompt_for_installation "node"    
     if [ "$env_choice" == "Linux" ]; then
         prompt_for_installation "docker"
         prompt_for_installation "gparted"
         prompt_for_installation "catppuccin"        
+        prompt_for_installation "sublime"
     fi
 
     # Install my beloved packages
@@ -243,6 +256,10 @@ main() {
             "docker")
                 add_dockerkeys
                 install_docker
+                ;;
+            "sublime")
+                add_sublimekeys
+                install_sublime
                 ;;
             "catppuccin")
                 install_catppuccin_gnome_terminal
