@@ -5,7 +5,7 @@ declare -A install_decisions
 install_common_packages() {
     echo "(re)Installing common packages (curl pass, gcc, stow...) ..."
     sudo apt update > /dev/null 2>&1
-    sudo apt install curl gnupg gcc pass unzip stow ca-certificates python3 g++ make python3-pip -y > /dev/null 2>&1 && echo "Common packages installed" || echo "Failed to install common packages."
+    sudo apt install curl gnupg gcc pass unzip stow ca-certificates python3 g++ make python3-pip python3.10-venv -y > /dev/null 2>&1 && echo "Common packages installed" || echo "Failed to install common packages."
 }
 
 install_ansible() {
