@@ -160,8 +160,20 @@ prompt_for_installation() {
 prompt_for_stow() {
     read -p "Do you want to stow your files(y/n): " choice
     if [ "$choice" == "y" ]; then
-        mv ~/.tmux.conf ~/.tmux.conf.bak && echo "backing up tmux conf" || echo "no previous tmux conf find"
-        stow */
+        # create a tmux session, install their plugins before stowing the files
+        # otherwise it will bug the catpuccin installation
+        echo "Installing tmux plugins beforehand..."
+        tmux new-session -d -s temp-session
+        tmux send-keys -t temp-session 'C-b I' C-m
+        # wait for the install to be completed...
+        # a more naive approach:
+        # sleep 10 
+        # a more complex approach:
+        tmux send-keys -t temp-session 'tmux wait-for -S install_done' C-m
+        tmux wait-for install_done
+        tmux kill-session -t temp-session
+        mv ~/.tmux.conf ~/.tmux.conf.bak && echo "backing up tmux conf" || echo "no previous tmux conf founded"
+        stow -t ~ */
     fi
 }
 
