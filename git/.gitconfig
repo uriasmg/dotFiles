@@ -1,0 +1,9 @@
+[credential]
+	helper = /mnt/c/Program\\ Files/Git/mingw64/bin/git-credential-manager.exe
+	credentialStore = gpg
+	helper = /usr/local/bin/git-credential-manager
+[credential "https://dev.azure.com"]
+	useHttpPath = true
+[user]
+	email = uriasmg@gmail.com
+	name = Müller Urias
